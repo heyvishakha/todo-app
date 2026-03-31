@@ -6,7 +6,17 @@ function showTasks() {
 
   tasks.forEach((task, index) => {
     let li = document.createElement("li");
-    li.innerText = task;
+
+    let span = document.createElement("span");
+    span.innerText = task.text;
+
+    if (task.completed) {
+      span.style.textDecoration = "line-through";
+    }
+
+    span.onclick = function () {
+      toggleTask(index);
+    };
 
     let btn = document.createElement("button");
     btn.innerText = "Delete";
@@ -14,28 +24,25 @@ function showTasks() {
       deleteTask(index);
     };
 
+    li.appendChild(span);
     li.appendChild(btn);
     list.appendChild(li);
   });
 }
-
-function addTask() {
-  let input = document.getElementById("taskInput");
-  let task = input.value;
-
-  if (task === "") return;
-
-  tasks.push(task);
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-
-  input.value = "";
-  showTasks();
-}
-
-function deleteTask(index) {
-  tasks.splice(index, 1);
+function toggleTask(index) {
+  tasks[index].completed = !tasks[index].completed;
   localStorage.setItem("tasks", JSON.stringify(tasks));
   showTasks();
 }
-
-showTasks();
+function clearAll() {
+  tasks = [];
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+  showTasks();
+}
+function clearAll() {
+  if (confirm("Are you sure?")) {
+    tasks = [];
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    showTasks();
+  }
+}
