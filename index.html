@@ -11,16 +11,18 @@
 
   <h1>My Todo App</h1>
 
-  <input type="text" id="taskInput" placeholder="Enter task">
-  <button onclick="addTask()">Add</button>
-
-  <ul id="taskList"></ul>
-
   <div class="container">
-  <!-- sab content yaha -->
+  <h1>My Todo App</h1>
+
+  <input id="taskInput" placeholder="Enter task" />
+  <button onclick="addTask()">Add</button>
+  <button onclick="clearAll()">Clear All</button>
 </div>
+<p id="taskCount"></p>
+  <ul id="taskList">
+    
+  </ul>
 
   <script src="script.js"></script>
-<button onclick="clearAll()">Clear All</button>
 </body>
 </html>
