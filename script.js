@@ -42,8 +42,8 @@ function showTasks() {
     }
 
     let time = document.createElement("small");
-    time.innerText = task.time;
-
+time.innerText = task.time ? task.time : "";
+    
     let editBtn = document.createElement("button");
     editBtn.innerText = "Edit";
     editBtn.onclick = function () {
