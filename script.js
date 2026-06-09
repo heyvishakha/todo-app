@@ -1,7 +1,10 @@
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 let editIndex = -1;
 
-// SHOW TASKS
+function saveTasks() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
 function showTasks() {
   let list = document.getElementById("taskList");
   list.innerHTML = "";
@@ -20,18 +23,26 @@ function showTasks() {
     `${total} tasks | ${completed} completed | ${remaining} remaining`;
 
   tasks.forEach((task, index) => {
+
     let li = document.createElement("li");
+
+    let checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = task.completed;
+
+    checkbox.onclick = function () {
+      toggleTask(index);
+    };
 
     let span = document.createElement("span");
     span.innerText = task.text;
 
     if (task.completed) {
-      span.style.textDecoration = "line-through";
+      span.classList.add("completed");
     }
 
-    span.onclick = function () {
-      toggleTask(index);
-    };
+    let time = document.createElement("small");
+    time.innerText = task.time;
 
     let editBtn = document.createElement("button");
     editBtn.innerText = "Edit";
@@ -45,7 +56,9 @@ function showTasks() {
       deleteTask(index);
     };
 
+    li.appendChild(checkbox);
     li.appendChild(span);
+    li.appendChild(time);
     li.appendChild(editBtn);
     li.appendChild(deleteBtn);
 
@@ -53,8 +66,8 @@ function showTasks() {
   });
 }
 
-// ADD TASK
 function addTask() {
+
   let input = document.getElementById("taskInput");
   let task = input.value.trim();
 
@@ -64,59 +77,74 @@ function addTask() {
   }
 
   if (editIndex === -1) {
+
     tasks.push({
       text: task,
-      completed: false
+      completed: false,
+      time: new Date().toLocaleString()
     });
+
   } else {
+
     tasks[editIndex].text = task;
     editIndex = -1;
+
   }
 
-  localStorage.setItem("tasks", JSON.stringify(tasks));
+  saveTasks();
 
   input.value = "";
+
   showTasks();
 }
 
-// DELETE TASK
 function deleteTask(index) {
+
   tasks.splice(index, 1);
-  localStorage.setItem("tasks", JSON.stringify(tasks));
+
+  saveTasks();
+
   showTasks();
 }
 
-// TOGGLE COMPLETE
 function toggleTask(index) {
+
   tasks[index].completed = !tasks[index].completed;
-  localStorage.setItem("tasks", JSON.stringify(tasks));
+
+  saveTasks();
+
   showTasks();
 }
 
-// EDIT TASK
 function editTask(index) {
-  let input = document.getElementById("taskInput");
-  input.value = tasks[index].text;
+
+  document.getElementById("taskInput").value =
+    tasks[index].text;
+
   editIndex = index;
 }
 
-// CLEAR ALL
 function clearAll() {
-  if (confirm("Are you sure you want to delete all tasks?")) {
+
+  if (confirm("Delete all tasks?")) {
+
     tasks = [];
-    localStorage.setItem("tasks", JSON.stringify(tasks));
+
+    saveTasks();
+
     showTasks();
   }
 }
 
-// ENTER KEY SUPPORT
 document
   .getElementById("taskInput")
   .addEventListener("keypress", function (e) {
+
     if (e.key === "Enter") {
       addTask();
     }
+
   });
 
-// INITIAL LOAD
+showTasks();
 showTasks();
